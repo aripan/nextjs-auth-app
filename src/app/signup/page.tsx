@@ -1,18 +1,63 @@
 "use client";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const SignupPage = () => {
+  const router = useRouter();
   const [user, setUser] = useState({
     email: "",
     password: "",
     username: "",
   });
+  const [buttonDisabled, setButtonDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onSignup = async () => {};
+  const onSignup = async () => {
+    try {
+      setLoading(true);
+
+      //@ that's how will be done in fetch. Just showed an example here.
+      // const response = await fetch("/api/users/signup", {
+      //   method: "POST",
+      //   body: JSON.stringify(user),
+      // });
+
+      // const data = await response.json();
+
+      // using axios instead of fetch
+      const response = await axios.post("/api/users/signup", user);
+      console.log("Signup success", response.data);
+
+      router.push("/login");
+    } catch (error) {
+      if (error instanceof Error) {
+        // Handle the error
+        console.log("Signup failed: " + error.message);
+      } else {
+        console.log({ error: "An unknown error occurred" }, { status: 500 });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      user.email.length > 0 &&
+      user.password.length > 0 &&
+      user.username.length > 0
+    ) {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [user]);
+
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen py-2 ">
-      <h1>Signup</h1>
+      <h1>{loading ? "Processing..." : "Signup"}</h1>
       <hr />
       <label htmlFor="username">username</label>
       <input
@@ -45,7 +90,7 @@ const SignupPage = () => {
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
         onClick={onSignup}
       >
-        Signup
+        {buttonDisabled ? "No signup" : "Signup"}
       </button>
       <Link href="/login"> Visit Login page</Link>
     </div>
