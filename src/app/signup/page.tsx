@@ -2,18 +2,27 @@
 import Link from "next/link";
 import React, { useState } from "react";
 
-const LoginPage = () => {
+const SignupPage = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
+    username: "",
   });
 
-  const onLogin = async () => {};
+  const onSignup = async () => {};
   return (
     <div className=" flex flex-col items-center justify-center min-h-screen py-2 ">
-      <h1>Login</h1>
+      <h1>Signup</h1>
       <hr />
-
+      <label htmlFor="username">username</label>
+      <input
+        type="text"
+        id="username"
+        placeholder="username"
+        value={user.username}
+        onChange={(e) => setUser({ ...user, username: e.target.value })}
+        className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black "
+      />
       <label htmlFor="email">email</label>
       <input
         type="text"
@@ -34,13 +43,13 @@ const LoginPage = () => {
       />
       <button
         className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600"
-        onClick={onLogin}
+        onClick={onSignup}
       >
-        Login
+        Signup
       </button>
-      <Link href="/signup"> Visit Signup page</Link>
+      <Link href="/login"> Visit Login page</Link>
     </div>
   );
 };
 
-export default LoginPage;
+export default SignupPage;
